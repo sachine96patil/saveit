@@ -1,0 +1,344 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.10586}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 import java.lang.*;\par
+import java.sql.*;\par
+import java.io.*;\par
+\par
+public class Javasql1\par
+\{\par
+public static void main(String[] args)\par
+\{\par
+int ch;\par
+String q;\par
+BufferedReader input = new BufferedReader(new InputStreamReader(System.in));\par
+String url = "jdbc:mysql://localhost/";\par
+String driver = "com.mysql.jdbc.Driver";\par
+String dbName = "studinfo";\par
+String userName = "root";\par
+String password="gescoe";\par
+\par
+try\{\par
+\par
+Connection conn = DriverManager.getConnection(url+dbName,userName,password);\par
+Statement st = conn.createStatement();\par
+ResultSet res;\par
+do\par
+\{\par
+\par
+System.out.println("\\n---------MENU---------");\par
+System.out.println("\\n1.Create Tables");\par
+System.out.println("\\n2.Insert Records");\par
+System.out.println("\\n3.Joins");\par
+System.out.println("\\n4.Exit");\par
+System.out.println("\\n\\nEnter your choice:");\par
+ch=Integer.parseInt(input.readLine());\par
+\par
+switch(ch)\par
+\{\par
+case 1:\par
+System.out.println("\\nCreating two table:student and marks");\par
+\par
+q="CREATE TABLE students(Roll_No int,Name VARCHAR(10),Department varchar(10));";\par
+st.executeUpdate(q);\par
+\par
+q="CREATE TABLE marks(Roll_No int,Name varchar(10),Internal_Marks int,External_Marks int);";\par
+st.executeUpdate(q);\par
+System.out.println("\\n'students' and 'marks'table Successfully created\\n");\par
+break;\par
+\par
+case 2:\par
+q = "INSERT INTO students VALUES(101,'Shubha','IT');";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO students VALUES(112,'Rohini','Civil');";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO students VALUES(103,'Nishi','Computer');";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO students VALUES(174, 'Anushka','Computer');";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO students VALUES(115,'Anuja','IT');";\par
+st.executeUpdate(q);\par
+\par
+q = "INSERT INTO marks VALUES(103,'Nishi',38,43);";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO marks VALUES(133,'Raj',35,39);";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO marks VALUES(174,'Anushka',43,45);";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO marks VALUES(111,'Sham',40,41);";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO marks VALUES(115,'Anuja',30,34);";\par
+st.executeUpdate(q);\par
+\par
+System.out.println("\\nInserted records into the tables 'students' and 'marks' successfully...\\n");\par
+break;\par
+\par
+case 3:\par
+do\{\par
+System.out.println("\\n\\n-------Joins-------\\n");\par
+System.out.println("\\n1.INNER JOIN");\par
+System.out.println("\\n2.LEFT OUTER JOIN");\par
+System.out.println("\\n3.RIGHT OUTER JOIN");\par
+System.out.println("\\n4.FULL OUTER JOIN");\par
+System.out.println("\\n5.Exit");\par
+System.out.println("\\n\\nEnter your choice:");\par
+ch=Integer.parseInt(input.readLine());\par
+switch(ch)\par
+\{\par
+case 1: q="SELECT students.Roll_No,students.Name, students.Department FROM students INNER JOIN marks ON students.Roll_No=marks.Roll_No;";\par
+res=st.executeQuery(q);\par
+System.out.println("\\n\\t-------------------------------------\par
+---------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS");\par
+System.out.println("\\n\\t------------------------------------\par
+-------------------------------\\n");\par
+while (res.next())\par
+\{\par
+int rollno = res.getInt("Roll_No");\par
+String name = res.getString("Name");\par
+String department = res.getString("Department");\par
+\par
+System.out.println("\\n\\tRoll No:"+rollno+"\\t Name:"+name+"\\tDepartment:"+department+"\\n");\par
+\}\par
+System.out.println("\\n\\t----------------------------------\par
+-----------------------------\\n");\par
+break;\par
+\par
+case 2:\par
+q="SELECT students.Roll_No,students.Name,\par
+marks.Internal_Marks FROM students LEFT OUTER JOIN marks ON students.Roll_No=marks.Roll_No;";\par
+\par
+res=st.executeQuery(q);\par
+System.out.println("\\n\\t----------------------------\par
+---------------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS");\par
+System.out.println("\\n\\t--------------------------------\par
+-----------------------------------\\n");\par
+\par
+while (res.next())\par
+\{\par
+int rollno = res.getInt("Roll_No");\par
+String name = res.getString("Name");\par
+int Imarks = res.getInt("Internal_Marks");\par
+System.out.println("\\n\\tRoll No:"+rollno+"\\t Name:"+name+"\\tInternal_Marks:"+Imarks+"\\n");\par
+\}\par
+System.out.println("\\n\\t-----------------------------------\par
+--------------------------------\\n");\par
+break;\par
+\par
+case 3:\par
+q="SELECT students.department,marks.Roll_No,marks, External_Marks FROM students RIGHT OUTER JOIN marks ON students.Name=marks.Name;";\par
+\par
+res=st.executeQuery(q);\par
+System.out.println("\\n\\t--------------------------------\par
+-----------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS");\par
+System.out.println("\\n\\t--------------------------------------\par
+-----------------------------\\n");\par
+\par
+while (res.next())\par
+\{\par
+String department = res.getString("Department");\par
+int rollno = res.getInt("Roll_No");\par
+int Emarks = res.getInt("External_Marks");\par
+System.out.println("\\n\\tDepartment:"+\par
+department +"Roll No:"+rollno+\par
+"\\tExternal Marks:"+Emarks+"\\n");\par
+\}\par
+System.out.println("\\n\\t-------------------------------------\par
+------------------------------\\n");\par
+break;\par
+\par
+case 4:\par
+q="SELECT * FROM students LEFT OUTER JOIN marks ON students.Roll_No=marks.Roll_No UNION SELECT * FROM students RIGHT OUTER JOIN marks ON\par
+students.Roll_No=marks.Roll_No;";\par
+\par
+res=st.executeQuery(q);\par
+System.out.println("\\n\\t---------------------------------\par
+----------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS"); System.out.println("\\n\\t------------------------------------\par
+-------------------------------\\n");\par
+while (res.next())\par
+\{\par
+int rollno = res.getInt("Roll_No");\par
+String name = res.getString("Name");\par
+int Imarks = res.getInt("Internal_Marks");\par
+int Emarks = res.getInt("External_Marks");\par
+System.out.println("\\n\\tRoll No:"+rollno+ "\\tName:"+name+"\\tInt_marks:"\par
++Imarks+"\\tEx_marks:"+Emarks+"\\n");\par
+\}\par
+System.out.println("\\n\\t-----------------------------------\par
+--------------------------------\\n");\par
+break;\par
+\par
+case 5: break;\par
+\}\par
+\}while(ch!=5);\par
+break;\par
+case 4: System.exit(0);\par
+\}\par
+\}while(ch!=4);\par
+\}\par
+catch(SQLException se)\par
+\{\par
+System.out.print("\\nCreated error is:\\n"+se+"\\n");\par
+\}\par
+catch (Exception e)\par
+\{\par
+System.out.print("\\nCreated error is:\\n"+e+"\\n");\par
+\}\par
+\}\par
+\}\par
+\par
+/*------------------------------------------------------------------------------------------------------\par
+\par
+OUTPUT\par
+\par
+In mysql -Server ;-\par
+\par
+mysql> create database studinfo;\par
+Query OK, 1 row affected (0.00 sec)\par
+\par
+On Terminal-client:-\par
+\par
+gescoe@gescoe:~/Desktop$ export CLASSPATH=$CLASSPATH:/usr/share/java/mysql-connector-java.jar\par
+gescoe@gescoe:~/Desktop$ javac Javasql1.java\par
+gescoe@gescoe:~/Desktop$ java Javasql1\par
+\par
+---------MENU---------\par
+1.Create Tables\par
+2.Insert Records\par
+3.Joins\par
+4.Exit\par
+\par
+Enter your choice:\par
+1\par
+\par
+Creating two table:student and marks\par
+\par
+'students' and 'marks'table Successfully created\par
+\par
+---------MENU---------\par
+1.Create Tables\par
+2.Insert Records\par
+3.Joins\par
+4.Exit\par
+\par
+Enter your choice:\par
+2\par
+\par
+Inserted records into the tables 'students' and 'marks' successfully...\par
+\par
+---------MENU---------\par
+1.Create Tables\par
+2.Insert Records\par
+3.Joins\par
+4.Exit\par
+\par
+Enter your choice:\par
+3\par
+\par
+-------Joins-------\par
+1.INNER JOIN\par
+2.LEFT OUTER JOIN\par
+3.RIGHT OUTER JOIN\par
+4.FULL OUTER JOIN\par
+5.Exit\par
+\par
+Enter your choice:\par
+1\par
+\par
+------------------------------------------------------------------------------------\par
+RECORDS\par
+------------------------------------------------------------------------------------\par
+Roll No:103 Name:Nishi Department:Computer\par
+Roll No:174 Name:Anushka Department:Computer\par
+Roll No:115 Name:Anuja Department:IT\par
+------------------------------------------------------------------------------------\par
+\par
+\par
+-------Joins-------\par
+1.INNER JOIN\par
+2.LEFT OUTER JOIN\par
+3.RIGHT OUTER JOIN\par
+4.FULL OUTER JOIN\par
+5.Exit\par
+\par
+Enter your choice:\par
+2\par
+\par
+-------------------------------------------------------------------------------\par
+RECORDS\par
+-------------------------------------------------------------------------------\par
+Roll No:103 Name:Nishi Internal_Marks:38\par
+Roll No:174 Name:Anushka Internal_Marks:43\par
+Roll No:115 Name:Anuja Internal_Marks:30\par
+Roll No:101 Name:Shubha Internal_Marks:0\par
+Roll No:112 Name:Rohini Internal_Marks:0\par
+-------------------------------------------------------------------------------\par
+\par
+-------Joins-------\par
+1.INNER JOIN\par
+2.LEFT OUTER JOIN\par
+3.RIGHT OUTER JOIN\par
+4.FULL OUTER JOIN\par
+5.Exit\par
+\par
+Enter your choice:\par
+3\par
+\par
+------------------------------------------------------------------------------------------------\par
+RECORDS\par
+------------------------------------------------------------------------------------------------\par
+Department:Computer Roll No:103 External Marks:43\par
+Department:Computer Roll No:174 External Marks:45\par
+Department:IT Roll No:115 External Marks:34\par
+Department:null Roll No:133 External Marks:39\par
+Department:null Roll No:111 External Marks:41\par
+------------------------------------------------------------------------------------------------\par
+\par
+-------Joins-------\par
+1.INNER JOIN\par
+2.LEFT OUTER JOIN\par
+3.RIGHT OUTER JOIN\par
+4.FULL OUTER JOIN\par
+5.Exit\par
+\par
+Enter your choice:\par
+4\par
+--------------------------------------------------------------------------------------------------\par
+RECORDS\par
+--------------------------------------------------------------------------------------------------\par
+Roll No:103 Name:Nishi Int_marks:38 Ex_marks:43\par
+Roll No:174 Name:Anushka Int_marks:43 Ex_marks:45\par
+Roll No:115 Name:Anuja Int_marks:30 Ex_marks:34\par
+Roll No:101 Name:Shubha Int_marks:0 Ex_marks:0\par
+Roll No:112 Name:Rohini Int_marks:0 Ex_marks:0\par
+Roll No:0 Name:null Int_marks:35 Ex_marks:39\par
+Roll No:0 Name:null Int_marks:40 Ex_marks:41\par
+---------------------------------------------------------------------------------------------------\par
+\par
+\par
+\par
+-------Joins-------\par
+1.INNER JOIN\par
+2.LEFT OUTER JOIN\par
+3.RIGHT OUTER JOIN\par
+4.FULL OUTER JOIN\par
+5.Exit\par
+\par
+Enter your choice:\par
+5\par
+\par
+---------MENU---------\par
+1.Create Tables\par
+2.Insert Records\par
+3.Joins\par
+4.Exit\par
+\par
+Enter your choice:\par
+4\par
+\par
+gescoe@gescoe:~/Desktop$ */\par
+\par
+}
+ 

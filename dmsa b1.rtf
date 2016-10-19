@@ -1,0 +1,433 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.10586}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 import java.lang.*;\par
+import java.sql.*;\par
+import java.io.*;\par
+\par
+public class Javasql\par
+\{\par
+public static void main(String[] args)\par
+\{\par
+int ch;\par
+String q;\par
+BufferedReader input = new BufferedReader(new InputStreamReader(System.in));\par
+String url = "jdbc:mysql://localhost/";\par
+String driver = "com.mysql.jdbc.Driver";\par
+String dbName = "company";\par
+String userName = "root";\par
+String password="gescoe";\par
+\par
+try\{\par
+\par
+Connection conn = DriverManager.getConnection(url+dbName,userName,password);\par
+Statement st = conn.createStatement();\par
+do\par
+\{\par
+\par
+System.out.println("\\n---------MENU---------");\par
+System.out.println("\\n1.Create Table");\par
+System.out.println("\\n2.Insert Records");\par
+System.out.println("\\n3.Select Table");\par
+System.out.println("\\n4.Update record");\par
+System.out.println("\\n5.Aggregation Function for Table");\par
+System.out.println("\\n6.Delete records");\par
+System.out.println("\\n7.Drop Table");\par
+System.out.println("\\n8.Exit");\par
+System.out.println("\\n\\nEnter your choice:");\par
+ch=Integer.parseInt(input.readLine());\par
+\par
+switch(ch)\par
+\{\par
+case 1:\par
+q="CREATE TABLE products(productID INT PRIMARY KEY, Name VARCHAR(15),Quantity INT,Price DECIMAL(7,2))";\par
+st.executeUpdate(q);\par
+\par
+System.out.println("\\n'products' table Successfully created\\n");\par
+break;\par
+\par
+case 2:\par
+q = "INSERT INTO products"+" VALUES(1351,'Monitor',2000,10000)";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO products"+" VALUES(1352,'Keyboard',2000,3000);";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO products "+"VALUES(1353,'CPU',5600,8000);";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO products "+"VALUES(1354,'Harddisk',500,3000);";\par
+st.executeUpdate(q);\par
+q = "INSERT INTO products "+"VALUES(1355,'USB',1500,500);";\par
+st.executeUpdate(q);\par
+\par
+System.out.println("\\nRecords inserted into the table 'products'...\\n");\par
+break;\par
+\par
+case 3:\par
+ResultSet res = st.executeQuery("SELECT * FROM products");\par
+System.out.println("\\n\\nTable:product\\n");\par
+System.out.println("\\n\\t-----------------------------------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS");\par
+System.out.println("\\n\\t---------------------------------------------------------\\n");\par
+while (res.next()) \{\par
+int id = res.getInt("productID");\par
+String name = res.getString("Name");\par
+int quan = res.getInt("Quantity");\par
+int price = res.getInt("Price");\par
+System.out.println("\\n\\tProductID:"+id+"\\t\\tName:"+name+ "\\tQuantity:"+quan+"\\tPrice:"+price+"\\n");\par
+\}\par
+System.out.println("\\n\\t--------------------------------------------------------\\n");\par
+\par
+break;\par
+\par
+case 4:\par
+q ="UPDATE products SET Price=10000 where Name='CPU'; ";\par
+st.executeUpdate(q);\par
+System.out.println("\\nRecord is updated where Name='CPU'");\par
+break;\par
+\par
+case 5:\par
+do\{\par
+System.out.println("\\n\\n------Aggregation Functions------\\n");\par
+System.out.println("\\n1.count()");\par
+System.out.println("\\n2.sum()");\par
+System.out.println("\\n3.max()");\par
+System.out.println("\\n4.min()");\par
+System.out.println("\\n5.avg()");\par
+System.out.println("\\n6.Exit");\par
+System.out.println("\\n\\nEnter your choice:");\par
+ch=Integer.parseInt(input.readLine());\par
+switch(ch)\par
+\{\par
+case 1:\par
+q="SELECT count(Name) as 'Total products' FROM products;";\par
+res=st.executeQuery(q);\par
+while (res.next())\par
+\{\par
+int total = res.getInt("Total Products");\par
+System.out.println("\\n\\tTotal products is:"+total+"\\n");\par
+\}\par
+\par
+break;\par
+\par
+case 2:\par
+q="SELECT sum(Quantity)as 'Total Quantity' FROM products;";\par
+res=st.executeQuery(q);\par
+while (res.next())\par
+\{\par
+int total = res.getInt("Total Quantity");\par
+System.out.println("\\n\\tTotal products Quantity:" +total+"\\n");\par
+\}\par
+\par
+break;\par
+\par
+case 3:\par
+q="SELECT * FROM products WHERE Quantity= (SELECT max(Quantity) FROM products);";\par
+res=st.executeQuery(q);\par
+System.out.println("\\n\\t---------------------------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS");\par
+System.out.println("\\n\\t------------------------------------------------\\n");\par
+while (res.next())\par
+\{\par
+int id = res.getInt("productID");\par
+String name = res.getString("Name");\par
+int quan = res.getInt("Quantity");\par
+int price = res.getInt("Price");\par
+System.out.println("\\n\\tProductID:"+id+"\\t\\tName:" +name+"\\tQuantity:"+quan+"\\tPrice:"+price+"\\n");\par
+\}\par
+System.out.println("\\n\\t-------------------------------------------------\\n");\par
+break;\par
+\par
+case 4:\par
+q="SELECT * FROM products WHERE Price=(SELECT min(Price) FROM products);";\par
+res=st.executeQuery(q);\par
+System.out.println("\\n\\t--------------------------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS");\par
+System.out.println("\\n\\t-------------------------------------------------\\n");\par
+while (res.next())\par
+\{\par
+int id = res.getInt("productID");\par
+String name = res.getString("Name");\par
+int quan = res.getInt("Quantity");\par
+int price = res.getInt("Price");\par
+System.out.println("\\n\\tProductID:"+id+"\\t\\tName:"+name+ "\\tQuantity:"+quan+"\\tPrice:"+price+"\\n");\par
+\}\par
+System.out.println("\\n\\t-------------------------------------------------\\n");\par
+break;\par
+\par
+case 5:\par
+q="SELECT DISTINCT Name FROM products WHERE Price>(SELECT AVG(Price) FROM products);";\par
+res=st.executeQuery(q);\par
+System.out.println("\\n\\t---------------------------------------------------");\par
+System.out.println("\\n\\t\\t\\t\\tRECORDS");\par
+System.out.println("\\n\\t-------------------------------------------------\\n");\par
+while (res.next())\par
+\{\par
+String name = res.getString("Name");\par
+System.out.println("\\n\\tName:"+name+"\\n");\par
+\par
+\}\par
+System.out.println("\\n\\t-------------------------------------------------\\n");\par
+break;\par
+\par
+case 6: break;\par
+\}\par
+\}while(ch!=6);\par
+break;\par
+\par
+\par
+\par
+case 6:\par
+q="DELETE FROM products;";\par
+st.executeUpdate(q);\par
+System.out.println("\\n'products' table is empty...\\n");\par
+\par
+break;\par
+\par
+case 7:\par
+q="DROP TABLE products;";\par
+st.executeUpdate(q);\par
+System.out.println("\\n 'products' table are deleted successfully...\\n");\par
+break;\par
+\par
+case 8: System.exit(0);\par
+\}\par
+\}while(ch!=8);\par
+\}\par
+catch(SQLException se)\par
+\{\par
+System.out.print("\\nCreated error is:\\n"+se+"\\n");\par
+\}\par
+catch (Exception e)\par
+\{\par
+System.out.print("\\nCreated error is:\\n"+e+"\\n");\par
+\}\par
+\}\par
+\}\par
+\par
+/*--------------------------------------------------------------------------------------------------------------\par
+OUTPUT:\par
+\par
+gescoe@gescoe:~/Desktop$ export CLASSPATH=$CLASSPATH:/usr/share/java/mysql-connector-java.jar\par
+gescoe@gescoe:~/Desktop$ javac Javasql.java\par
+gescoe@gescoe:~/Desktop$ java Javasql\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+1\par
+\par
+'products' table Successfully created\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+2\par
+\par
+Records inserted into the table 'products'...\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+3\par
+\par
+\par
+Table:product\par
+\par
+----------------------------------------------------------------------------------------------------------\par
+RECORDS\par
+---------------------------------------------------------------------------------------------------------\par
+\par
+Product ID:1351 Name:Monitor Quantity:2000 Price:10000\par
+Product ID:1352 Name:Keyboard Quantity:2000 Price:3000\par
+Product ID:1353 Name:CPU Quantity:5600 Price:8000\par
+Product ID:1354 Name:Harddisk Quantity:500 Price:3000\par
+Product ID:1355 Name:USB Quantity:1500 Price:500\par
+---------------------------------------------------------------------------------------------------------\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+4\par
+\par
+Record is updated where Name='CPU'\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+5\par
+\par
+------Aggregation Functions------\par
+1.count()\par
+2.sum()\par
+3.max()\par
+4.min()\par
+5.avg()\par
+6.Exit\par
+\par
+Enter your choice:\par
+1\par
+\par
+Total products is:5\par
+\par
+------Aggregation Functions------\par
+1.count()\par
+2.sum()\par
+3.max()\par
+4.min()\par
+5.avg()\par
+6.Exit\par
+\par
+Enter your choice:\par
+2\par
+\par
+Total products Quantity:11600\par
+\par
+------Aggregation Functions------\par
+1.count()\par
+2.sum()\par
+3.max()\par
+4.min()\par
+5.avg()\par
+6.Exit\par
+\par
+Enter your choice:\par
+3\par
+\par
+------------------------------------------------------------------------------------------\par
+RECORDS\par
+------------------------------------------------------------------------------------------\par
+\par
+Product ID:1353 Name:CPU Quantity:5600 Price:10000\par
+------------------------------------------------------------------------------------------\par
+\par
+------Aggregation Functions------\par
+1.count()\par
+2.sum()\par
+3.max()\par
+4.min()\par
+5.avg()\par
+6.Exit\par
+\par
+Enter your choice:\par
+4\par
+\par
+\par
+--------------------------------------------------------------------------------------\par
+RECORDS\par
+--------------------------------------------------------------------------------------\par
+Product ID:1355 Name:USB Quantity:1500 Price:500\par
+--------------------------------------------------------------------------------------\par
+\par
+\par
+------Aggregation Functions------\par
+1.count()\par
+2.sum()\par
+3.max()\par
+4.min()\par
+5.avg()\par
+6.Exit\par
+\par
+Enter your choice:\par
+5\par
+\par
+-------------------------------------------------------------------\par
+RECORDS\par
+-------------------------------------------------------------------\par
+Name:Monitor\par
+Name:CPU\par
+-------------------------------------------------------------------\par
+\par
+------Aggregation Functions------\par
+1.count()\par
+2.sum()\par
+3.max()\par
+4.min()\par
+5.avg()\par
+6.Exit\par
+\par
+Enter your choice:\par
+6\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+6\par
+\par
+'products' table is empty...\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+7\par
+\par
+'products' table are deleted successfully...\par
+\par
+---------MENU---------\par
+1.Create Table\par
+2.Insert Records\par
+3.Select Table\par
+4.Update record\par
+5.Aggregation Function for Table\par
+6.Delete records\par
+7.Drop Table\par
+8.Exit\par
+\par
+Enter your choice:\par
+8\par
+\par
+}
+ 

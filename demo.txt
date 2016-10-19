@@ -1,0 +1,33 @@
+this is new kjkdnfbnnsg
+sdghkhdfhkhndg
+dfvbjhbadjfv
+import socket
+import sys
+
+s = socket.socket()
+
+s.bind(("localhost",9991))
+
+s.listen(10)  
+
+while True:
+    sc, address = s.accept()
+
+    print address
+   
+    f = open('file11.txt','wb') #open in binary
+ 
+    while True:       
+   
+        l = sc.recv(3)
+        while (l):
+                f.write(l)
+		f.flush()
+                l = sc.recv(3)
+    f.close()
+
+
+    sc.close()
+
+s.close()
+
